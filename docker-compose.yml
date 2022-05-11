@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+ 
+  app:
+    hostname: app
+    build:
+      context: .
+    ports:
+     - "8000:8000"
+    volumes:
+      - ./:/app/
+    command: >
+      sh -c "
+             python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    depends_on:
+      - rabbitmq
+      - celeryworker
+    links:
+      - rabbitmq
+  # redis:  
+  #     image: redis:6-alpine
+  #     volumes:
+  #       - ./redis.conf:/usr/local/etc/redis/redis.conf
+  #     ports:
+  #       - "6379:6379"
+  rabbitmq:
+      container_name: "rabbitmq"
+      hostname: rabbitmq
+      restart: always
+      image: rabbitmq:3.8-management-alpine
+      environment:
+          - RABBITMQ_DEFAULT_USER=guest
+          - RABBITMQ_DEFAULT_PASS=guest
+      ports:
+          # AMQP protocol port
+          - '5672:5672'
+          # HTTP management UI
+          - '15672:15672'
+  celeryworker:
+      container_name: celery_worker
+      build: 
+        context: .
+      volumes:
+        - ./:/backend
+      command:  celery -A DjangoCelery worker -l info
+      links:
+        - rabbitmq
+      depends_on:
+        - rabbitmq
+ 
+  
+          
+
+
+
