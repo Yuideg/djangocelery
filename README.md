@@ -14,7 +14,7 @@
     <img src="images/Logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Made By FalseG0d</h3>
+  <h3 align="center">Made By Yideg</h3>
 
   <p align="center">
     A List of Django Apps using Celery to implement the process of multitasking on a server using SMTP protocol. Many times on a server a few seconds of wait can lead to poor User Experience this is most prominent in sending EMails as it takes a significant time for the protocols to setup a secure method to exchange information. This however can be remedied using Celery and RabbitMQ, when implemented with django they can push the tasks and process them whenever CPU is free, allowing us to perform other tasks.
